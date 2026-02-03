@@ -1,0 +1,30 @@
+---
+description: Next.js 與紓壓遊戲頁面、特效元件的撰寫規範
+globs: "**/*.tsx,**/*.ts"
+alwaysApply: false
+---
+
+# Next.js 紓壓遊戲開發規範
+
+## 專案結構
+- 首頁選單：`app/page.tsx` 或 `app/page.jsx`。
+- 模式頁面：`app/mode/[id]/page.tsx`，以動態路由 `[id]` 對應 1～16。
+- 共用的特效／Canvas 邏輯可放在 `components/` 或 `lib/`，每種模式可對應一個元件（如 `RippleEffect`、`ParticleBurst`）。
+
+## 元件與效能
+- 使用 **functional components**；每個模式頁面負責一種「按壓 → 特效」邏輯。
+- 特效建議用 **Canvas API** 或 **requestAnimationFrame** 以維持流暢；避免在單次點擊產生過多 DOM 節點。
+- 若使用 React state 驅動動畫，注意在元件卸載時取消動畫或清除 timer，避免 memory leak。
+
+## 樣式與體驗
+- 模式頁面建議 **全螢幕或大區域** 可點擊，觸控與滑鼠都要支援（`onClick` / `onTouchEnd` 等）。
+- 色彩與動畫以 **紓壓、賞心悅目** 為優先；可提供淺色／深色背景或主題切換（選用）。
+
+## 部署與建置
+- 建置指令：`npm run build`（或 `pnpm build`）；輸出依 Next.js 預設。
+- 上傳至 GitHub 後，在 Vercel 連結該 repo；Vercel 會自動偵測 Next.js，無需額外設定即可部署。
+- 勿將 `node_modules`、`.next` 提交至 Git；需有正確的 `.gitignore`。
+
+## 程式風格
+- 註解與變數命名可使用繁體中文或英文，以可讀性為準。
+- 新增模式時，請對應 `.cursor/rules/project-overview.mdc` 中的 16 種模式清單編號與名稱。
