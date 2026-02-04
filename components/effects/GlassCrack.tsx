@@ -11,7 +11,7 @@ interface Crack {
 
 const DEFAULT_CRACK_LINES = 12;
 const DEFAULT_MAX_CRACKS = 5;
-const DEFAULT_LINE_WIDTH = 1.5;
+const DEFAULT_LINE_WIDTH = 2.2;
 
 interface GlassCrackProps {
   params?: Record<string, number | string>;
@@ -94,7 +94,7 @@ export default function GlassCrack({ params }: GlassCrackProps) {
       const { x, y } = getCanvasPoint(canvas, clientX, clientY);
 
       const lines: Crack["lines"] = [];
-      const radius = randomBetween(50, 100) * effectScale;
+      const radius = randomBetween(80, 160) * effectScale;
       for (let i = 0; i < crackLines; i++) {
         const a = (i / crackLines) * Math.PI * 2 + randomBetween(-0.2, 0.2);
         const r = radius * randomBetween(0.5, 1);

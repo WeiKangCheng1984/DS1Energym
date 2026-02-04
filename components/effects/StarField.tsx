@@ -16,8 +16,8 @@ interface Star {
 const DEFAULT_STARS_PER_TAP = 3;
 const DEFAULT_MAX_STARS = 30;
 
-const DEFAULT_STAR_LENGTH_MIN = 60;
-const DEFAULT_STAR_LENGTH_MAX = 150;
+const DEFAULT_STAR_LENGTH_MIN = 90;
+const DEFAULT_STAR_LENGTH_MAX = 200;
 
 interface StarFieldProps {
   params?: Record<string, number | string>;
@@ -47,7 +47,7 @@ export default function StarField({ params }: StarFieldProps) {
 
     const alive: Star[] = [];
     for (const s of starsRef.current) {
-      s.progress += 2;
+      s.progress += 1.4;
       if (s.progress >= s.maxProgress) continue;
       alive.push(s);
       const t = s.progress / s.maxProgress;

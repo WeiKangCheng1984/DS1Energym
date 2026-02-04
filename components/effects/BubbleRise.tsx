@@ -13,9 +13,9 @@ interface Bubble {
 
 const DEFAULT_BUBBLES_PER_TAP = 6;
 const DEFAULT_MAX_BUBBLES = 40;
-const DEFAULT_SIZE_MIN = 8;
-const DEFAULT_SIZE_MAX = 22;
-const DEFAULT_RISE_SPEED = 2;
+const DEFAULT_SIZE_MIN = 14;
+const DEFAULT_SIZE_MAX = 32;
+const DEFAULT_RISE_SPEED = 1.1;
 
 interface BubbleRiseProps {
   params?: Record<string, number | string>;
@@ -29,7 +29,7 @@ export default function BubbleRise({ params }: BubbleRiseProps) {
   const sizeMin = Number(params?.sizeMin ?? DEFAULT_SIZE_MIN) * effectScale;
   const sizeMax = Number(params?.sizeMax ?? DEFAULT_SIZE_MAX) * effectScale;
   const riseSpeed = Number(params?.riseSpeed ?? DEFAULT_RISE_SPEED);
-  const alphaDecay = 0.008 / Math.max(0.5, stayDuration);
+  const alphaDecay = 0.005 / Math.max(0.5, stayDuration);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bubblesRef = useRef<Bubble[]>([]);
   const rafRef = useRef<number>(0);

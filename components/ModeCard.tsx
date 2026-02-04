@@ -53,13 +53,13 @@ export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
   return (
     <>
       <div
-        className="animate-card-enter rounded-2xl bg-gradient-to-br from-rose-400 via-amber-400 to-orange-500 p-[3px] shadow-lg transition-shadow duration-300 hover:shadow-[0_0_28px_rgba(251,113,133,0.35),0_0_40px_rgba(251,191,36,0.22)] dark:hover:shadow-[0_0_32px_rgba(251,113,133,0.25),0_0_44px_rgba(251,191,36,0.18)]"
+        className="animate-card-enter rounded-2xl bg-gradient-to-br from-slate-300/70 via-slate-200/80 to-sky-300/70 p-[3px] shadow-[0_18px_40px_rgba(15,23,42,0.45)] transition-shadow duration-300 hover:shadow-[0_24px_55px_rgba(15,23,42,0.65)]"
         style={{ animationDelay: `${delayMs}ms` }}
       >
         <Link
           href={`/mode/${mode.id}`}
           onClick={handleClick}
-          className={`group relative flex overflow-hidden rounded-[13px] bg-gradient-to-br ${mode.color} p-4 text-black shadow-inner transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 focus:ring-offset-rose-50 dark:focus:ring-offset-stone-900 sm:p-5`}
+          className={`group relative flex overflow-hidden rounded-[13px] bg-gradient-to-br ${mode.color} p-4 text-slate-900 dark:text-slate-50 shadow-inner transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 focus:ring-offset-rose-50 dark:focus:ring-offset-stone-900 sm:p-5`}
         >
           {ripple && (
             <span
@@ -68,12 +68,12 @@ export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
               aria-hidden
             />
           )}
-          <span className="pointer-events-none absolute inset-0 rounded-[13px] bg-white/15" aria-hidden />
+          <span className="pointer-events-none absolute inset-0 rounded-[13px] bg-white/20" aria-hidden />
           <span className="absolute right-2 top-2 z-20 sm:right-3 sm:top-3">
             <button
               type="button"
               onClick={handleSettingsClick}
-              className="flex items-center justify-center rounded-full border-2 border-stone-700 bg-white/90 p-2 text-stone-800 shadow-md transition hover:bg-white hover:border-stone-800 hover:shadow-lg"
+              className="flex items-center justify-center rounded-full border-2 border-slate-600 bg-white/85 px-2 py-2 text-slate-800 shadow-md transition hover:bg-white hover:border-slate-800 hover:shadow-lg dark:border-slate-400 dark:bg-slate-900/90 dark:text-slate-100"
               aria-label={`${mode.name} 參數設定`}
             >
               <GearIcon />
@@ -90,9 +90,9 @@ export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
               />
             </div>
             <div className="min-w-0 flex-1 pt-2 sm:pt-0">
-              <span className="text-xs font-medium text-black/80">#{mode.id}</span>
-              <h2 className="text-lg font-bold text-black sm:text-xl">{mode.name}</h2>
-              <p className="mt-1 text-sm font-medium text-black/90">{mode.description}</p>
+              <span className="text-xs font-semibold text-slate-900/80 dark:text-slate-100/80">#{mode.id}</span>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50 sm:text-xl">{mode.name}</h2>
+              <p className="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{mode.description}</p>
             </div>
           </div>
         </Link>

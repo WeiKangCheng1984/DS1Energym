@@ -17,8 +17,8 @@ interface Petal {
 
 const DEFAULT_PETALS_PER_TAP = 8;
 const DEFAULT_MAX_PETALS = 50;
-const DEFAULT_SIZE_MIN = 8;
-const DEFAULT_SIZE_MAX = 18;
+const DEFAULT_SIZE_MIN = 14;
+const DEFAULT_SIZE_MAX = 30;
 const DEFAULT_ROT_SPEED = 0.05;
 
 interface PetalFallProps {
@@ -52,10 +52,11 @@ export default function PetalFall({ params }: PetalFallProps) {
 
     const alive: Petal[] = [];
     for (const p of petalsRef.current) {
-      p.x += p.vx;
+      p.x += p.vx + Math.sin(p.y * 0.02) * 0.3;
       p.y += p.vy;
       p.rot += p.rotSpeed;
-      p.vy += 0.15;
+      p.vy += 0.08;
+      p.vx *= 0.99;
       p.alpha -= alphaDecay;
       if (p.y > h + 20 || p.alpha <= 0) continue;
       alive.push(p);
@@ -112,7 +113,7 @@ export default function PetalFall({ params }: PetalFallProps) {
           x,
           y,
           vx: randomBetween(-2, 2),
-          vy: randomBetween(-1, 2),
+          vy: randomBetween(-0.4, 1.4),
           rot: randomBetween(0, Math.PI * 2),
           rotSpeed: randomBetween(-rotSpeedRange, rotSpeedRange),
           size: randomBetween(sizeMin, sizeMax),

@@ -14,9 +14,9 @@ interface Snow {
 
 const DEFAULT_FLAKES_PER_TAP = 12;
 const DEFAULT_MAX_FLAKES = 80;
-const DEFAULT_SIZE_MIN = 2;
-const DEFAULT_SIZE_MAX = 6;
-const DEFAULT_FALL_SPEED = 1.2;
+const DEFAULT_SIZE_MIN = 4;
+const DEFAULT_SIZE_MAX = 10;
+const DEFAULT_FALL_SPEED = 0.7;
 
 interface SnowflakeProps {
   params?: Record<string, number | string>;
