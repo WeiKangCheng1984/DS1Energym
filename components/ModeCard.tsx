@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { GameMode } from "@/lib/constants";
 import ParamsModal from "./ParamsModal";
 
 interface ModeCardProps {
   mode: GameMode;
+  /** 用於錯落進場動畫的延遲索引 */
+  staggerIndex?: number;
 }
 
 function GearIcon() {
@@ -18,8 +20,14 @@ function GearIcon() {
   );
 }
 
-export default function ModeCard({ mode }: ModeCardProps) {
+export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
   const [showParamsModal, setShowParamsModal] = useState(false);
+  const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null);
+  const rippleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (rippleTimeoutRef.current) clearTimeout(rippleTimeoutRef.current);
+  }, []);
 
   const handleSettingsClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,40 +35,68 @@ export default function ModeCard({ mode }: ModeCardProps) {
     setShowParamsModal(true);
   };
 
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = e.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (rippleTimeoutRef.current) clearTimeout(rippleTimeoutRef.current);
+    setRipple({ x, y });
+    rippleTimeoutRef.current = setTimeout(() => {
+      setRipple(null);
+      rippleTimeoutRef.current = null;
+    }, 560);
+  }, []);
+
+  const delayMs = staggerIndex * 50;
+
   return (
     <>
-      <Link
-        href={`/mode/${mode.id}`}
-        className={`group relative flex overflow-hidden rounded-2xl border-2 border-orange-400 bg-gradient-to-br ${mode.color} p-4 text-black shadow-lg transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl hover:border-orange-500 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 focus:ring-offset-amber-50 dark:focus:ring-offset-stone-900 sm:p-5`}
+      <div
+        className="animate-card-enter rounded-2xl bg-gradient-to-br from-rose-400 via-amber-400 to-orange-500 p-[3px] shadow-lg transition-shadow duration-300 hover:shadow-[0_0_28px_rgba(251,113,133,0.35),0_0_40px_rgba(251,191,36,0.22)] dark:hover:shadow-[0_0_32px_rgba(251,113,133,0.25),0_0_44px_rgba(251,191,36,0.18)]"
+        style={{ animationDelay: `${delayMs}ms` }}
       >
-        <span className="pointer-events-none absolute inset-0 rounded-2xl bg-white/15" aria-hidden />
-        <span className="absolute right-2 top-2 z-20 sm:right-3 sm:top-3">
-          <button
-            type="button"
-            onClick={handleSettingsClick}
-            className="flex items-center justify-center rounded-full border-2 border-stone-700 bg-white/90 p-2 text-stone-800 shadow-md transition hover:bg-white hover:border-stone-800 hover:shadow-lg"
-            aria-label={`${mode.name} 參數設定`}
-          >
-            <GearIcon />
-          </button>
-        </span>
-        <div className="relative z-10 flex w-full flex-col sm:flex-row sm:items-center sm:gap-4">
-          <div className="flex shrink-0 items-center justify-center sm:w-20">
-            <img
-              src={`/icons/mode-${mode.id}.svg`}
-              alt=""
-              width={64}
-              height={64}
-              className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
+        <Link
+          href={`/mode/${mode.id}`}
+          onClick={handleClick}
+          className={`group relative flex overflow-hidden rounded-[13px] bg-gradient-to-br ${mode.color} p-4 text-black shadow-inner transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 focus:ring-offset-rose-50 dark:focus:ring-offset-stone-900 sm:p-5`}
+        >
+          {ripple && (
+            <span
+              className="ripple-effect absolute h-[100px] w-[100px] rounded-full bg-white/50"
+              style={{ left: ripple.x, top: ripple.y }}
+              aria-hidden
             />
+          )}
+          <span className="pointer-events-none absolute inset-0 rounded-[13px] bg-white/15" aria-hidden />
+          <span className="absolute right-2 top-2 z-20 sm:right-3 sm:top-3">
+            <button
+              type="button"
+              onClick={handleSettingsClick}
+              className="flex items-center justify-center rounded-full border-2 border-stone-700 bg-white/90 p-2 text-stone-800 shadow-md transition hover:bg-white hover:border-stone-800 hover:shadow-lg"
+              aria-label={`${mode.name} 參數設定`}
+            >
+              <GearIcon />
+            </button>
+          </span>
+          <div className="relative z-10 flex w-full flex-col sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex shrink-0 items-center justify-center sm:w-20">
+              <img
+                src={`/icons/mode-${mode.id}.svg`}
+                alt=""
+                width={64}
+                height={64}
+                className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
+              />
+            </div>
+            <div className="min-w-0 flex-1 pt-2 sm:pt-0">
+              <span className="text-xs font-medium text-black/80">#{mode.id}</span>
+              <h2 className="text-lg font-bold text-black sm:text-xl">{mode.name}</h2>
+              <p className="mt-1 text-sm font-medium text-black/90">{mode.description}</p>
+            </div>
           </div>
-          <div className="min-w-0 flex-1 pt-2 sm:pt-0">
-            <span className="text-xs font-medium text-black/80">#{mode.id}</span>
-            <h2 className="text-lg font-bold text-black sm:text-xl">{mode.name}</h2>
-            <p className="mt-1 text-sm font-medium text-black/90">{mode.description}</p>
-          </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
       <ParamsModal
         open={showParamsModal}
         onClose={() => setShowParamsModal(false)}

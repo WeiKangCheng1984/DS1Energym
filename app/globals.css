@@ -30,6 +30,54 @@ body.mode-page {
   overflow: hidden;
 }
 
+/* 卡片進場動畫（錯落） */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-card-enter {
+  animation: card-enter 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* 背景裝飾小圓點呼吸 */
+@keyframes dot-float {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+.animate-dot-float {
+  animation: dot-float 4s ease-in-out infinite;
+}
+
+/* 卡片點擊漣漪反饋 */
+@keyframes ripple {
+  to {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 0.55s ease-out forwards;
+  pointer-events: none;
+}
+
 @layer utilities {
   .touch-manipulation {
     touch-action: manipulation;
