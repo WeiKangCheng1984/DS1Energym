@@ -88,6 +88,7 @@ export default function GeothermalTurningGame({ mode }: GeothermalTurningGamePro
     (e: React.PointerEvent) => {
       const player = draggingRef.current;
       if (!started || player === null) return;
+      e.preventDefault();
       const prevY = player === 1 ? lastClientYRef.current : p2LastClientYRef.current;
       const deltaY = e.clientY - prevY;
       if (player === 1) lastClientYRef.current = e.clientY;
@@ -162,7 +163,7 @@ export default function GeothermalTurningGame({ mode }: GeothermalTurningGamePro
               <span className="text-xs text-white">金字塔</span>
             </div>
             <div
-              className="touch-manipulation select-none rounded-full bg-orange-600 px-12 py-12 text-white shadow-lg"
+              className="touch-none select-none rounded-full bg-orange-600 px-12 py-12 text-white shadow-lg"
               onPointerDown={(e) => handlePointerDown(e, 1)}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
@@ -185,7 +186,7 @@ export default function GeothermalTurningGame({ mode }: GeothermalTurningGamePro
                 <div key={i} className="h-3 border border-amber-900/80" style={{ width: 40 + i * 16, backgroundColor: layer > i ? "#eab308" : "#78350f" }} />
               ))}
               <div
-                className="min-h-[44px] min-w-[44px] touch-manipulation rounded-full bg-orange-600 px-10 py-10"
+                className="min-h-[44px] min-w-[44px] touch-none rounded-full bg-orange-600 px-10 py-10"
                 onPointerDown={(e) => handlePointerDown(e, 1)}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
@@ -202,7 +203,7 @@ export default function GeothermalTurningGame({ mode }: GeothermalTurningGamePro
                 <div key={i} className="h-3 border border-amber-900/80" style={{ width: 40 + i * 16, backgroundColor: p2Layer > i ? "#eab308" : "#78350f" }} />
               ))}
               <div
-                className="min-h-[44px] min-w-[44px] touch-manipulation rounded-full bg-orange-600 px-10 py-10"
+                className="min-h-[44px] min-w-[44px] touch-none rounded-full bg-orange-600 px-10 py-10"
                 onPointerDown={(e) => handlePointerDown(e, 2)}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}

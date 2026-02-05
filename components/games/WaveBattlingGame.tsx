@@ -126,6 +126,7 @@ export default function WaveBattlingGame({ mode }: WaveBattlingGameProps) {
     (e: React.PointerEvent) => {
       const player = draggingRef.current;
       if (!started || player === null) return;
+      e.preventDefault();
       const deltaX = typeof e.movementX === "number" ? e.movementX : e.clientX - (player === 1 ? lastClientXRef.current : p2LastClientXRef.current);
       if (player === 1) lastClientXRef.current = e.clientX;
       else p2LastClientXRef.current = e.clientX;
@@ -212,7 +213,7 @@ export default function WaveBattlingGame({ mode }: WaveBattlingGameProps) {
               <polyline points={ropePoints(sway)} fill="none" stroke="#38bdf8" strokeWidth="3" strokeLinecap="round" />
             </svg>
             <div
-              className="touch-manipulation select-none rounded-full bg-sky-500 px-12 py-12 text-white shadow-lg"
+              className="touch-none select-none rounded-full bg-sky-500 px-12 py-12 text-white shadow-lg"
               onPointerDown={(e) => handlePointerDown(e, 1)}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
@@ -235,7 +236,7 @@ export default function WaveBattlingGame({ mode }: WaveBattlingGameProps) {
                 <polyline points={ropePoints(sway)} fill="none" stroke="#38bdf8" strokeWidth="2" />
               </svg>
               <div
-                className="min-h-[44px] min-w-[44px] touch-manipulation rounded-full bg-sky-500 px-10 py-10"
+                className="min-h-[44px] min-w-[44px] touch-none rounded-full bg-sky-500 px-10 py-10"
                 onPointerDown={(e) => handlePointerDown(e, 1)}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
@@ -255,7 +256,7 @@ export default function WaveBattlingGame({ mode }: WaveBattlingGameProps) {
                 <polyline points={ropePoints(p2Sway)} fill="none" stroke="#38bdf8" strokeWidth="2" />
               </svg>
               <div
-                className="min-h-[44px] min-w-[44px] touch-manipulation rounded-full bg-sky-500 px-10 py-10"
+                className="min-h-[44px] min-w-[44px] touch-none rounded-full bg-sky-500 px-10 py-10"
                 onPointerDown={(e) => handlePointerDown(e, 2)}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
