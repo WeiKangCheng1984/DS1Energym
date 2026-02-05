@@ -1,6 +1,6 @@
-# 紓壓小遊戲
+# 電幻1號所 Energym
 
-單頁紓壓小遊戲，共 **16 種模式**。點擊或按壓畫面即可觸發不同視覺特效。
+單頁能源主題互動遊戲，共 **5 款遊戲**：水力彈跳、風力舞踏、光伏運動、波浪戰繩、地熱飛輪。每款含 60 秒倒數、關卡目標、雙人競賽與勝利畫面。
 
 ## 技術棧
 
@@ -32,28 +32,17 @@ npm run build
 npm run start
 ```
 
-## 16 種模式
+## 5 款遊戲
 
-| 編號 | 模式名稱 |
-|------|----------|
-| 1 | 漣漪／水波 |
-| 2 | 粒子爆炸／煙火 |
-| 3 | 泡泡破裂 |
-| 4 | 星空／流星 |
-| 5 | 墨水暈染 |
-| 6 | 碎玻璃／裂紋 |
-| 7 | 花瓣／葉子飄落 |
-| 8 | 彩虹光暈 |
-| 9 | 幾何圖形擴散 |
-| 10 | 螢火蟲／光點 |
-| 11 | 雪花 |
-| 12 | 按壓變形 |
-| 13 | 音波／聲波圈 |
-| 14 | 塗鴉／畫筆軌跡 |
-| 15 | 氣泡上升 |
-| 16 | 自訂 |
+| 編號 | 遊戲名稱 | 說明 |
+|------|----------|------|
+| 1 | 水力彈跳 (Hydro Jump) | 點擊圓點使水柱上升，三階段過關 |
+| 2 | 風力舞踏 (Wind Dancing) | 左右交替點擊，Logo 變色完成 |
+| 3 | 光伏運動 (Solar Shooting) | 投進 12 顆光子球至太陽能板 |
+| 4 | 波浪戰繩 (Wave Battling) | 壓住搖擺產生波痕，光條滿即過關 |
+| 5 | 地熱飛輪 (Geothermal Turning) | 飛輪踩踏，金字塔逐層亮燈至蒸汽噴發 |
 
-首頁為模式選單，點選卡片進入 `/mode/1`～`/mode/16`，在該頁面點擊或觸控即可觸發對應特效。
+首頁為遊戲選單，點選卡片進入 `/mode/1`～`/mode/5`，每款支援單人與雙人競賽。
 
 ## 部署到 Vercel
 
@@ -62,7 +51,7 @@ npm run start
      ```bash
      git init
      git add .
-     git commit -m "Initial commit: 紓壓小遊戲"
+     git commit -m "Initial commit: 電幻1號所 Energym"
      git branch -M main
      git remote add origin https://github.com/你的帳號/你的儲存庫名稱.git
      git push -u origin main
@@ -82,12 +71,14 @@ npm run start
 ```
 app/
   page.tsx              # 首頁選單
-  mode/[id]/page.tsx    # 動態路由（1–16）
+  mode/[id]/page.tsx    # 動態路由（1–5）
 components/
-  ModeCard.tsx          # 模式卡片
-  effects/              # 各模式特效元件
+  ModeCard.tsx          # 遊戲卡片
+  games/                # 五款遊戲元件與勝利 SVG
 lib/
-  constants.ts          # 模式常數
+  constants.ts          # 遊戲常數
+  useCountdown.ts       # 60 秒倒數
+  useSound.ts           # 簡易音效
   utils.ts              # 共用工具
 ```
 

@@ -69,16 +69,18 @@ export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
             />
           )}
           <span className="pointer-events-none absolute inset-0 rounded-[13px] bg-white/20" aria-hidden />
-          <span className="absolute right-2 top-2 z-20 sm:right-3 sm:top-3">
-            <button
-              type="button"
-              onClick={handleSettingsClick}
-              className="flex items-center justify-center rounded-full border-2 border-slate-600 bg-white/85 px-2 py-2 text-slate-800 shadow-md transition hover:bg-white hover:border-slate-800 hover:shadow-lg dark:border-slate-400 dark:bg-slate-900/90 dark:text-slate-100"
-              aria-label={`${mode.name} 參數設定`}
-            >
-              <GearIcon />
-            </button>
-          </span>
+          {mode.id > 5 && (
+            <span className="absolute right-2 top-2 z-20 sm:right-3 sm:top-3">
+              <button
+                type="button"
+                onClick={handleSettingsClick}
+                className="flex items-center justify-center rounded-full border-2 border-slate-600 bg-white/85 px-2 py-2 text-slate-800 shadow-md transition hover:bg-white hover:border-slate-800 hover:shadow-lg dark:border-slate-400 dark:bg-slate-900/90 dark:text-slate-100"
+                aria-label={`${mode.name} 參數設定`}
+              >
+                <GearIcon />
+              </button>
+            </span>
+          )}
           <div className="relative z-10 flex w-full flex-col sm:flex-row sm:items-center sm:gap-4">
             <div className="flex shrink-0 items-center justify-center sm:w-20">
               <img

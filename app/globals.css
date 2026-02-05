@@ -78,6 +78,16 @@ body.mode-page {
   pointer-events: none;
 }
 
+/* 水流動畫（水力彈跳水管） */
+@keyframes flow {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 20px;
+  }
+}
+
 @layer utilities {
   .touch-manipulation {
     touch-action: manipulation;

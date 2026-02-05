@@ -7,7 +7,7 @@ export default function NotFound() {
         找不到頁面
       </h1>
       <p className="text-slate-600 dark:text-slate-400">
-        請檢查網址，或返回首頁選擇 1～16 號模式。
+        請檢查網址，或返回首頁選擇 1～5 號遊戲。
       </p>
       <Link
         href="/"

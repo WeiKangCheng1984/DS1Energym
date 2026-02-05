@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "觸感小宇宙 | Touch Cosmos",
-  description: "Touch Cosmos 觸感小宇宙 — 16 種紓壓特效，點擊即觸發",
+  title: "電幻1號所 | Energym",
+  description: "電幻1號所 Energym — 五款能源主題互動遊戲，水力、風力、光伏、波浪、地熱",
 };
 
 export default function RootLayout({
