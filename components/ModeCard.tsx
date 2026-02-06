@@ -9,6 +9,8 @@ interface ModeCardProps {
   mode: GameMode;
   /** 用於錯落進場動畫的延遲索引 */
   staggerIndex?: number;
+  /** 可選，合併到根層 wrapper（例如 grid 欄位） */
+  className?: string;
 }
 
 function GearIcon() {
@@ -20,7 +22,7 @@ function GearIcon() {
   );
 }
 
-export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
+export default function ModeCard({ mode, staggerIndex = 0, className }: ModeCardProps) {
   const [showParamsModal, setShowParamsModal] = useState(false);
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null);
   const rippleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -53,7 +55,7 @@ export default function ModeCard({ mode, staggerIndex = 0 }: ModeCardProps) {
   return (
     <>
       <div
-        className="animate-card-enter rounded-2xl bg-gradient-to-br from-slate-300/70 via-slate-200/80 to-sky-300/70 p-[3px] shadow-[0_18px_40px_rgba(15,23,42,0.45)] transition-shadow duration-300 hover:shadow-[0_24px_55px_rgba(15,23,42,0.65)]"
+        className={`animate-card-enter rounded-2xl bg-gradient-to-br from-slate-300/70 via-slate-200/80 to-sky-300/70 p-[3px] shadow-[0_18px_40px_rgba(15,23,42,0.45)] transition-shadow duration-300 hover:shadow-[0_24px_55px_rgba(15,23,42,0.65)]${className ? ` ${className}` : ""}`}
         style={{ animationDelay: `${delayMs}ms` }}
       >
         <Link

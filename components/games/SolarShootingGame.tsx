@@ -32,14 +32,12 @@ interface SolarShootingGameProps {
 }
 
 export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
-  const [isDual, setIsDual] = useState(false);
   const [started, setStarted] = useState(false);
   const [score, setScore] = useState(0);
-  const [p2Score, setP2Score] = useState(0);
   const [balls, setBalls] = useState<Ball[]>([]);
   const [cloud, setCloud] = useState(false);
   const [winner, setWinner] = useState<1 | 2 | null>(null);
-  const [drag, setDrag] = useState<{ player: 1 | 2; startX: number; startY: number; currentX: number; currentY: number } | null>(null);
+  const [drag, setDrag] = useState<{ startX: number; startY: number; currentX: number; currentY: number } | null>(null);
   const ballIdRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -51,16 +49,10 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
     return () => clearInterval(t);
   }, [started]);
 
-  const getLaunchPos = useCallback(
-    (player: 1 | 2) => {
-      if (!isDual) return { x: 0.5, y: 0.82 };
-      return player === 1 ? { x: 0.28, y: 0.82 } : { x: 0.72, y: 0.82 };
-    },
-    [isDual]
-  );
+  const launchPos = { x: 0.5, y: 0.82 };
 
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent, player: 1 | 2) => {
+    (e: React.PointerEvent) => {
       if (!started || !containerRef.current) return;
       e.preventDefault();
       const rect = containerRef.current.getBoundingClientRect();
@@ -68,11 +60,10 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
       const h = rect.height;
       const x = (e.clientX - rect.left) / w;
       const y = (e.clientY - rect.top) / h;
-      const launch = getLaunchPos(player);
-      setDrag({ player, startX: launch.x, startY: launch.y, currentX: x, currentY: y });
+      setDrag({ startX: launchPos.x, startY: launchPos.y, currentX: x, currentY: y });
       (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
     },
-    [started, getLaunchPos]
+    [started]
   );
 
   const handlePointerMove = useCallback(
@@ -92,7 +83,7 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
     (e: React.PointerEvent) => {
       if (!drag || !started) return;
       e.preventDefault();
-      const { player, startX, startY, currentX, currentY } = drag;
+      const { startX, startY, currentX, currentY } = drag;
       const dx = startX - currentX;
       const dy = startY - currentY;
       const len = Math.hypot(dx, dy) || 0.001;
@@ -109,7 +100,7 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
       vy *= jitter;
       const id = ++ballIdRef.current;
       playTap();
-      setBalls((b) => [...b, { id, x: startX, y: startY, vx, vy, player }]);
+      setBalls((b) => [...b, { id, x: startX, y: startY, vx, vy, player: 1 }]);
       setDrag(null);
     },
     [drag, started]
@@ -137,25 +128,14 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
             const dx = ball.x - HOLE_CENTER_X;
             const dy = ball.y - HOLE_CENTER_Y;
             if (dx * dx + dy * dy < HOLE_R * HOLE_R) {
-              if (ball.player === 1) {
-                setScore((s) => {
-                  const next = s + 1;
-                  if (next >= GOALS_TO_WIN) {
-                    setWinner(1);
-                    playSuccess();
-                  }
-                  return next;
-                });
-              } else {
-                setP2Score((s) => {
-                  const next = s + 1;
-                  if (next >= GOALS_TO_WIN) {
-                    setWinner(2);
-                    playSuccess();
-                  }
-                  return next;
-                });
-              }
+              setScore((s) => {
+                const next = s + 1;
+                if (next >= GOALS_TO_WIN) {
+                  setWinner(1);
+                  playSuccess();
+                }
+                return next;
+              });
               return false;
             }
             if (ball.y > 1.15 || ball.x < -0.15 || ball.x > 1.15) return false;
@@ -172,7 +152,6 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
   const handleStart = useCallback(() => {
     setStarted(true);
     setScore(0);
-    setP2Score(0);
     setBalls([]);
     setDrag(null);
     setWinner(null);
@@ -183,7 +162,6 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
   const handleRetry = useCallback(() => {
     reset();
     setScore(0);
-    setP2Score(0);
     setBalls([]);
     setWinner(null);
     setStarted(false);
@@ -196,7 +174,7 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
       topRight={
         started ? (
           <span className="rounded-full bg-amber-500/90 px-3 py-1 text-sm font-bold text-stone-900">
-            {secondsLeft}s {isDual ? `P1:${score} P2:${p2Score}` : `${score}/${GOALS_TO_WIN}`}
+            {secondsLeft}s {score}/{GOALS_TO_WIN}
           </span>
         ) : null
       }
@@ -204,14 +182,16 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-amber-100 to-orange-900" />
       {!started && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-slate-900/90 p-4">
-          <button type="button" onClick={() => setIsDual((d) => !d)} className="rounded-full border-2 border-amber-400 px-4 py-2 text-sm font-medium text-white">
-            {isDual ? "雙人競賽" : "單人"} （點擊切換）
-          </button>
           <button type="button" onClick={handleStart} className="rounded-full bg-amber-500 px-8 py-3 text-lg font-bold text-white shadow-lg hover:bg-amber-400">
             開始遊戲
           </button>
           <p className="text-center text-xs text-amber-200/90">按下後開始 60 秒倒數</p>
           <p className="text-center text-sm text-slate-400">向後拉動光子球再放開發射，受重力影響可能沒進</p>
+          {mode.scienceNote && (
+            <p className="max-w-sm text-center text-xs text-slate-500">
+              <span className="font-medium text-amber-300/90">能源小知識：</span> {mode.scienceNote}
+            </p>
+          )}
         </div>
       )}
 
@@ -263,35 +243,21 @@ export default function SolarShootingGame({ mode }: SolarShootingGameProps) {
           </>
         )}
 
-        {/* 彈弓觸控區：單人一區、雙人手機上下/平板以上左右 */}
-        <div className={`flex w-full flex-1 flex-col items-end justify-center gap-4 pb-6 md:flex-row ${!isDual ? "md:justify-center" : ""}`}>
+        <div className="flex w-full flex-1 flex-col items-center justify-center gap-4 pb-6">
           <div
-            className="flex min-h-[120px] w-full flex-col items-center justify-end rounded-xl border-2 border-dashed border-amber-400/50 bg-amber-950/20 md:h-36 md:w-28"
-            style={!isDual ? { margin: "0 auto" } : {}}
-            onPointerDown={(e) => handlePointerDown(e, 1)}
+            className="flex min-h-[120px] w-full max-w-[180px] flex-col items-center justify-end rounded-xl border-2 border-dashed border-amber-400/50 bg-amber-950/20 md:h-36 md:w-28"
+            onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
             onPointerCancel={handlePointerUp}
           >
-            <span className="mb-2 text-xs font-medium text-amber-200/90">玩家 1 — 向後拉再放開發射</span>
+            <span className="mb-2 text-xs font-medium text-amber-200/90">向後拉再放開發射</span>
           </div>
-          {isDual && (
-            <div
-              className="flex min-h-[120px] w-full flex-col items-center justify-end rounded-xl border-2 border-dashed border-amber-400/50 bg-amber-950/20 md:h-36 md:w-28"
-              onPointerDown={(e) => handlePointerDown(e, 2)}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onPointerLeave={handlePointerUp}
-              onPointerCancel={handlePointerUp}
-            >
-              <span className="mb-2 text-xs font-medium text-amber-200/90">玩家 2 — 向後拉再放開發射</span>
-            </div>
-          )}
         </div>
       </div>
 
-      <VictoryModal open={winner !== null} onClose={() => setWinner(null)} onRetry={handleRetry} title="過關！" winnerLabel={isDual && winner ? `玩家 ${winner} 獲勝` : undefined}>
+      <VictoryModal open={winner !== null} onClose={() => setWinner(null)} onRetry={handleRetry} title="過關！">
         <SolarPanelVictory />
       </VictoryModal>
     </GameLayout>
